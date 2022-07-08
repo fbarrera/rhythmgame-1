@@ -6,10 +6,16 @@ using UnityEngine.Events;
 
 public class TimerManager : MonoBehaviour
 {
-    
+
+    #region Attributes
+
     [SerializeField] private float time, timeLimit; 
     [SerializeField] bool isStarted, isStartTriggered, isPaused, isPauseTriggered, isEnded, isRestartTriggered;
     [SerializeField] private List<SerializedEvent> timerEvents;
+
+    #endregion
+
+    #region Unity Events
 
     void Start()
     {
@@ -21,6 +27,10 @@ public class TimerManager : MonoBehaviour
         TimerEvents();
         TimeProcessor();
     }
+
+    #endregion
+
+    #region Utility Methods
 
     void TimeProcessor()
     {
@@ -43,30 +53,9 @@ public class TimerManager : MonoBehaviour
         isStartTriggered = false;
     }
 
-    public void OnStarted()
-    {
-        Debug.Log("Started!");
-    }
+    #endregion
 
-    public void OnContinued()
-    {
-        Debug.Log("Continued!");
-    }
-
-    public void OnPaused()
-    {
-        Debug.Log("Paused!");
-    }
-
-    public void OnEnded()
-    {
-        Debug.Log("Time is up!");
-    }
-
-    public void OnRestarted()
-    {
-        Debug.Log("Let's try again!");
-    }
+    #region Logic Data Retriever
 
     public float GetTime(){
         return time;
@@ -106,6 +95,10 @@ public class TimerManager : MonoBehaviour
         return isRestartTriggered;
     }
 
+    #endregion
+
+    #region LogicDataSetter
+
     public void SetTimeLimit(float newTimeLimit){
         timeLimit = newTimeLimit;
     }
@@ -115,12 +108,7 @@ public class TimerManager : MonoBehaviour
         isStarted = true;
         time = 0;
     }
-
-    public void TriggerStart()
-    {
-        isStartTriggered = true;
-    }
-
+    
     public void SetEnded(bool newState)
     {
         isEnded = newState;
@@ -135,11 +123,6 @@ public class TimerManager : MonoBehaviour
     {
         SetPaused(true);
         isPauseTriggered = false;
-    }
-
-    public void TriggerPause()
-    {
-        isPauseTriggered = true;
     }
 
     public void SetContinueTriggered()
@@ -160,8 +143,52 @@ public class TimerManager : MonoBehaviour
         isStartTriggered = false;
     }
 
+    #endregion
 
-    //Events
+    #region MainProcessTriggers
+
+    public void TriggerStart()
+    {
+        isStartTriggered = true;
+    }
+
+    public void TriggerPause()
+    {
+        isPauseTriggered = true;
+    }
+
+    #endregion
+
+    #region Event Methods
+
+    public void OnStarted()
+    {
+        Debug.Log("Started!");
+    }
+
+    public void OnContinued()
+    {
+        Debug.Log("Continued!");
+    }
+
+    public void OnPaused()
+    {
+        Debug.Log("Paused!");
+    }
+
+    public void OnEnded()
+    {
+        Debug.Log("Time is up!");
+    }
+
+    public void OnRestarted()
+    {
+        Debug.Log("Let's try again!");
+    }
+
+    #endregion
+
+    #region Event Collector
 
     public void TimerEvents() {
         foreach(SerializedEvent item in timerEvents)
@@ -201,4 +228,6 @@ public class TimerManager : MonoBehaviour
             }
         }   
     }
+
+    #endregion
 }
