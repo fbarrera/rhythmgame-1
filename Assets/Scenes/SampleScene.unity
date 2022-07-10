@@ -329,7 +329,8 @@ MonoBehaviour:
   isStartTriggered: 0
   isPaused: 0
   isPauseTriggered: 0
-  isEnded: 0
+  isTimeUp: 0
+  isTimeUpTriggered: 0
   isRestartTriggered: 0
   timerEvents:
   - eventName: Start
@@ -360,9 +361,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventName: Time Up
+    eventInstance:
+      m_PersistentCalls:
+        m_Calls:
         - m_Target: {fileID: 1829207277}
           m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
-          m_MethodName: OnStarted
+          m_MethodName: SetTimeUpTriggered
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -372,25 +377,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - eventName: Time Up
-    eventInstance:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1829207277}
-          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
-          m_MethodName: SetEnded
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1829207277}
-          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
-          m_MethodName: OnEnded
+        - m_Target: {fileID: 1829207280}
+          m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+          m_MethodName: TriggerAccumulatedGain
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -416,18 +405,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1829207277}
-          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
-          m_MethodName: OnPaused
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - eventName: Continue
     eventInstance:
       m_PersistentCalls:
@@ -435,18 +412,6 @@ MonoBehaviour:
         - m_Target: {fileID: 1829207277}
           m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
           m_MethodName: SetContinueTriggered
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1829207277}
-          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
-          m_MethodName: OnContinued
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -472,18 +437,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1829207277}
-          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
-          m_MethodName: OnRestarted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1829207278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,6 +450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerManager: {fileID: 1829207277}
+  scoreManager: {fileID: 1829207280}
 --- !u!4 &1829207279
 Transform:
   m_ObjectHideFlags: 0
@@ -524,3 +478,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 588c747dccfdebe49a5c44709864caec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  score: 0
+  accumulatedScore: 0
+  isGainTriggered: 0
+  isAccumulatedGainTriggered: 0
+  isSetTriggered: 0
+  scoreEvents:
+  - eventName: Set
+    eventInstance:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1829207280}
+          m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+          m_MethodName: SetSetTriggered
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventName: Gain
+    eventInstance:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1829207280}
+          m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+          m_MethodName: SetGainTriggered
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventName: AccumulatedGain
+    eventInstance:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1829207280}
+          m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+          m_MethodName: AddAccumulatedScore
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1829207280}
+          m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+          m_MethodName: SetAccumulatedGainTriggered
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2

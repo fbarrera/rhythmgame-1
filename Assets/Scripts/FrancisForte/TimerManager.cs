@@ -10,17 +10,12 @@ public class TimerManager : MonoBehaviour
     #region Attributes
 
     [SerializeField] private float time, timeLimit; 
-    [SerializeField] bool isStarted, isStartTriggered, isPaused, isPauseTriggered, isEnded, isRestartTriggered;
+    [SerializeField] bool isStarted, isStartTriggered, isPaused, isPauseTriggered, isTimeUp, isTimeUpTriggered, isRestartTriggered;
     [SerializeField] private List<SerializedEvent> timerEvents;
 
     #endregion
 
     #region Unity Events
-
-    void Start()
-    {
-        ResetAll();
-    }
 
     void Update()
     {
@@ -38,17 +33,17 @@ public class TimerManager : MonoBehaviour
         {
             if (isPaused)
                 return;
-            if (isEnded)
+            if (isTimeUp)
                 return;
             time += Time.deltaTime;
         }
     }
     
-    void ResetAll(){
+    public void ResetAll(){
         time = 0;
         isStarted = false;
         isPaused = false;
-        isEnded = false;
+        isTimeUp = false;
         isPauseTriggered = false;
         isStartTriggered = false;
     }
@@ -73,8 +68,8 @@ public class TimerManager : MonoBehaviour
         return isPaused;
     }
 
-    public bool GetEnded(){
-        return isEnded;
+    public bool GetTimeUp(){
+        return isTimeUp;
     }
 
     public bool GetStartTriggered()
@@ -95,9 +90,14 @@ public class TimerManager : MonoBehaviour
         return isRestartTriggered;
     }
 
+    public bool GetTimeUpTriggered()
+    {
+        return isTimeUpTriggered;
+    }
+
     #endregion
 
-    #region LogicDataSetter
+    #region Logic Data Setter
 
     public void SetTimeLimit(float newTimeLimit){
         timeLimit = newTimeLimit;
@@ -109,9 +109,9 @@ public class TimerManager : MonoBehaviour
         time = 0;
     }
     
-    public void SetEnded(bool newState)
+    public void SetTimeUp(bool newState)
     {
-        isEnded = newState;
+        isTimeUp = newState;
     }
 
     public void SetPaused(bool newState)
@@ -143,9 +143,15 @@ public class TimerManager : MonoBehaviour
         isStartTriggered = false;
     }
 
+    public void SetTimeUpTriggered()
+    {
+        SetTimeUp(true);
+        isTimeUpTriggered = false;
+    }
+
     #endregion
 
-    #region MainProcessTriggers
+    #region Main Process Triggers
 
     public void TriggerStart()
     {
@@ -157,31 +163,41 @@ public class TimerManager : MonoBehaviour
         isPauseTriggered = true;
     }
 
+    public void TriggerRestart()
+    {
+        isRestartTriggered = true;
+    }
+
+    public void TriggerTimeUp()
+    {
+        isTimeUpTriggered = true;
+    }
+
     #endregion
 
     #region Event Methods
 
-    public void OnStarted()
+    public void OnStart()
     {
         Debug.Log("Started!");
     }
 
-    public void OnContinued()
+    public void OnContinue()
     {
         Debug.Log("Continued!");
     }
 
-    public void OnPaused()
+    public void OnPause()
     {
         Debug.Log("Paused!");
     }
 
-    public void OnEnded()
+    public void OnTimeUp()
     {
         Debug.Log("Time is up!");
     }
 
-    public void OnRestarted()
+    public void OnRestart()
     {
         Debug.Log("Let's try again!");
     }
@@ -198,30 +214,35 @@ public class TimerManager : MonoBehaviour
                 case "Start":
                     if (GetTime() == 0 && GetStartTriggered() && !GetStarted())
                     {
+                        OnStart();
                         item.eventInstance?.Invoke();
                     }
                     break;
                 case "Time Up":
-                    if (GetTime() > GetTimeLimit() && GetStarted() && !GetEnded())
+                    if ((GetTime() > GetTimeLimit() && GetStarted() && !GetTimeUp()) || GetTimeUpTriggered())
                     {
+                        OnTimeUp();
                         item.eventInstance?.Invoke();
                     }
                     break;
                 case "Pause":
-                    if (GetPauseTriggered() && !GetPaused() && !GetEnded())
+                    if (GetPauseTriggered() && !GetPaused() && !GetTimeUp())
                     {
+                        OnPause();
                         item.eventInstance?.Invoke();
                     }
                     break;
                 case "Continue":
-                    if (GetContinueTriggered() && GetPaused() && !GetEnded())
+                    if (GetContinueTriggered() && GetPaused() && !GetTimeUp())
                     {
+                        OnContinue();
                         item.eventInstance?.Invoke();
                     }
                     break;
                 case "Restart":
                     if (GetRestartTriggered())
                     {
+                        OnRestart();
                         item.eventInstance?.Invoke();
                     }
                     break;
