@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using Melanchall.DryWetMidi.Common;
+﻿using Melanchall.DryWetMidi.Common;
 using Melanchall.DryWetMidi.Composing;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Melanchall.DryWetMidi.Standards;
+using System;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public class DemoScript : MonoBehaviour
@@ -85,7 +85,7 @@ public class DemoScript : MonoBehaviour
         _playback.Loop = true;
         _playback.NotesPlaybackStarted += OnNotesPlaybackStarted;
         _playback.NotesPlaybackFinished += OnNotesPlaybackFinished;
-       
+
         Debug.Log($"Output device [{OutputDeviceName}] initialized.");
     }
 

@@ -1,13 +1,7 @@
-using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using Melanchall.DryWetMidi.Common;
-using Melanchall.DryWetMidi.Composing;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
-using Melanchall.DryWetMidi.Multimedia;
-using Melanchall.DryWetMidi.Standards;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FileOpen : MonoBehaviour
@@ -26,23 +20,24 @@ public class FileOpen : MonoBehaviour
         string filePath = defaultFolder + projectName + defaultFileName;
         midiFile = MidiFile.Read(filePath);
         IEnumerable<TrackChunk> trackChunks = midiFile.GetTrackChunks();
-		TempoMap tempoMap = midiFile.GetTempoMap();
-		var tc = tempoMap.GetTempoChanges();
-		ValueChange<Tempo> t = tc.First();
-		Tempo tempo = t.Value;
-		double BPM = tempo.BeatsPerMinute;
-		double BPN = tempo.MicrosecondsPerQuarterNote;
-		Debug.Log("BPM: " + BPM);
+        TempoMap tempoMap = midiFile.GetTempoMap();
+        var tc = tempoMap.GetTempoChanges();
+        ValueChange<Tempo> t = tc.First();
+        Tempo tempo = t.Value;
+        double BPM = tempo.BeatsPerMinute;
+        double BPN = tempo.MicrosecondsPerQuarterNote;
+        Debug.Log("BPM: " + BPM);
 
-        foreach(TrackChunk chunk in trackChunks)
+        foreach (TrackChunk chunk in trackChunks)
         {
-			#nullable enable
-			string? trackName = GetTrackName(chunk); 
-			#nullable disable
+#nullable enable
+            string? trackName = GetTrackName(chunk);
+#nullable disable
 
-			if(trackName != null){
+            if (trackName != null)
+            {
 
-				/*
+                /*
 				Debug.Log("Track Name ######### " + trackName);
 
 				if(trackName == "Pulse"){
@@ -66,11 +61,14 @@ public class FileOpen : MonoBehaviour
 				Debug.Log("---");
 				*/
 
-			} else {
-				foreach(var e in chunk.Events){
-					//Debug.Log(e.ToString());
-				}
-			}
+            }
+            else
+            {
+                foreach (var e in chunk.Events)
+                {
+                    //Debug.Log(e.ToString());
+                }
+            }
         }
 
 
@@ -85,6 +83,6 @@ public class FileOpen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

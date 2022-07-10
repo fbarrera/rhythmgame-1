@@ -1,15 +1,15 @@
 using FrancisForte.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class TimerManager : MonoBehaviour
 {
 
     #region Attributes
 
-    [SerializeField] private float time, timeLimit; 
+    [SerializeField] private float time, timeLimit;
     [SerializeField] bool isStarted, isStartTriggered, isPaused, isPauseTriggered, isTimeUp, isTimeUpTriggered, isRestartTriggered;
     [SerializeField] private List<SerializedEvent> timerEvents;
 
@@ -26,6 +26,10 @@ public class TimerManager : MonoBehaviour
     #endregion
 
     #region Utility Methods
+    Func<bool> GetTimeUntil(float seconds)
+    {
+        return () => GetTime() >= seconds;
+    }
 
     void TimeProcessor()
     {
@@ -38,8 +42,9 @@ public class TimerManager : MonoBehaviour
             time += Time.deltaTime;
         }
     }
-    
-    public void ResetAll(){
+
+    public void ResetAll()
+    {
         time = 0;
         isStarted = false;
         isPaused = false;
@@ -52,23 +57,28 @@ public class TimerManager : MonoBehaviour
 
     #region Logic Data Retriever
 
-    public float GetTime(){
+    public float GetTime()
+    {
         return time;
     }
 
-    public float GetTimeLimit(){
+    public float GetTimeLimit()
+    {
         return timeLimit;
     }
 
-    public bool GetStarted(){
+    public bool GetStarted()
+    {
         return isStarted;
     }
 
-    public bool GetPaused(){
+    public bool GetPaused()
+    {
         return isPaused;
     }
 
-    public bool GetTimeUp(){
+    public bool GetTimeUp()
+    {
         return isTimeUp;
     }
 
@@ -77,11 +87,13 @@ public class TimerManager : MonoBehaviour
         return isStartTriggered;
     }
 
-    public bool GetPauseTriggered(){
+    public bool GetPauseTriggered()
+    {
         return isPauseTriggered;
     }
 
-    public bool GetContinueTriggered(){
+    public bool GetContinueTriggered()
+    {
         return isPauseTriggered;
     }
 
@@ -99,7 +111,8 @@ public class TimerManager : MonoBehaviour
 
     #region Logic Data Setter
 
-    public void SetTimeLimit(float newTimeLimit){
+    public void SetTimeLimit(float newTimeLimit)
+    {
         timeLimit = newTimeLimit;
     }
 
@@ -108,7 +121,7 @@ public class TimerManager : MonoBehaviour
         isStarted = true;
         time = 0;
     }
-    
+
     public void SetTimeUp(bool newState)
     {
         isTimeUp = newState;
@@ -206,8 +219,9 @@ public class TimerManager : MonoBehaviour
 
     #region Event Collector
 
-    public void TimerEvents() {
-        foreach(SerializedEvent item in timerEvents)
+    public void TimerEvents()
+    {
+        foreach (SerializedEvent item in timerEvents)
         {
             switch (item.eventName)
             {
@@ -247,7 +261,32 @@ public class TimerManager : MonoBehaviour
                     }
                     break;
             }
-        }   
+        }
+    }
+
+    #endregion
+
+    #region Corroutine Methods
+
+    public IEnumerator PauseAt(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        TriggerPause();
+    }
+
+    public IEnumerator ExecuteAfter(float seconds, Action callback)
+    {
+        yield return new WaitUntil(GetTimeUntil(seconds));
+        callback?.Invoke();
+    }
+
+    public IEnumerator ExecuteAfter(float seconds, List<Action> Callbacks)
+    {
+        yield return new WaitUntil(GetTimeUntil(seconds));
+        foreach (Action callback in Callbacks)
+        {
+            callback?.Invoke();
+        }
     }
 
     #endregion
